@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact-Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <link rel="stylesheet" href="contact.css">
+</head>
+
+<body>
+
+    <!--nav baar  -->
+
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img src="nav.png">
+        </div>
+        <ul class="navbar-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="aboutus.html">About</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="navbar-search">
+            <input type="text" placeholder="Search...">
+            <button onclick="searchFunction()">Search</button>
+        </div>
+        <div class="navbar-login">
+            <button onclick="showModal()">Login / Signup</button>
+        </div>
+    </nav>
+    <!-- Log-in & Sign-up Popup -->
+    <div class="overlay" onclick="closeModal()"></div>
+    <div class="loginform">
+        <div class="container-a" id="container">
+            <div class="form-container sign-up">
+                <form action="register" method="POST">
+                    <h1>Create Account</h1>
+                    <div class="social-icons">
+                        <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                    <span>or use your email for registeration</span>
+                    <input type="text" name="name" placeholder="Name">
+                    <input type="email" name="email" placeholder="Email">
+                    <input type="password" name="password" placeholder="Password">
+                    <button name="btn">Sign Up</button>
+                </form>
+            </div>
+            <div class="form-container sign-in">
+                <form action="login" method="POST">
+                    <h1>Sign In</h1>
+                    <div class="social-icons">
+                        <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                    <span>or use your email password</span>
+                    <input type="email" name="email" placeholder="Email">
+                    <input type="password" name="password" placeholder="Password">
+                    <a href="#">Forget Your Password?</a>
+                    <button name="btn">Sign In</button>
+                </form>
+            </div>
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-left">
+                        <img src="login-2.png" id="background-image" alt="">
+                        <button class="hidden" id="login">Sign In</button>
+                        <video id="background-video" loop muted autoplay>
+                            <source src="login-v1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="toggle-panel toggle-right">
+                        <img src="login-1.png" id="background-image" alt="">
+                        <button class="hidden" id="register" style="margin-top: 19px;">Sign Up</button>
+                        <video id="background-video" loop muted autoplay>
+                            <source src="login-v2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showModal() {
+            document.querySelector('.overlay').classList.add('showoverlay');
+            document.querySelector('.loginform').classList.add('showloginform');
+        }
+
+        function closeModal() {
+            document.querySelector('.overlay').classList.remove('showoverlay');
+            document.querySelector('.loginform').classList.remove('showloginform');
+        }
+
+        const container = document.getElementById('container');
+        const registerBtn = document.getElementById('register');
+        const loginBtn = document.getElementById('login');
+
+        registerBtn.addEventListener('click', () => {
+            container.classList.add("active");
+        });
+
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove("active");
+        });
+
+    </script>
+
+    <!-- contect-us  -->
+    <div class="container">
+        <form id="form" method="POST">
+            <h1>Contact Us Form</h1>
+            <div id="res" style="color:greenyellow;font-size: 10px;"></div>
+            <input type="text" name="firstname" placeholder="First Name" required>
+            <input type="text" name="lastname" placeholder="Last Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="mobile" placeholder="Mobile" required>
+            <h4>Type Your Message Here...</h4>
+            <textarea name="message" required></textarea>
+            <input type="submit" value="Send" id="button">
+        </form>
+    </div>
+    <script>
+
+        //this script using for save data of contactus page
+        let url = 'https://script.google.com/macros/s/AKfycbxeU4B5fMbzWkFcd-09lqwcWGS3RG4K2CzMvHe6iYoWFdocCpfSFtK6uXYm_BTmAGU7Qw/exec';
+        let form = document.querySelector('#form');
+        form.addEventListener("submit", (e) => {
+            document.getElementById("button").value = "Submitting";         // process ke time submitting likha aaega
+
+            let d = new FormData(form);           // form se data leta h ye
+
+            fetch(url, {                          // API se data fetch krna
+                method: "POST",
+                body: d
+            }).then((res) => res.text())
+                .then((finalRes) => {
+
+                    document.getElementById("button").value = "Send";      // btn pr click krne pr response dikhaega
+                    document.getElementById("res").innerHTML = finalRes;
+
+                    form.reset();                                         // send krne ke baad from reset kr dega
+
+                    setTimeout(() => {                                    // kuchh time ke baad form empty hoga
+                        document.getElementById("res").innerHTML = '';
+                    }, 5000);
+                }).catch((error) => {
+                    document.getElementById("button").value = "Send";     // ager koi error huaa to error dikhega
+                    document.getElementById("res").innerHTML = "Error: " + error.message;
+                });
+
+            e.preventDefault();                    // reload hone se rokta h
+        });
+    </script>
+</body>
+
+</html>

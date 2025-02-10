@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="aboutus.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>about us</title>
+</head>
+
+<body>
+
+    <!-- nav baar -->
+
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img src="nav.png">
+        </div>
+        <ul class="navbar-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="aboutus.html">About</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="navbar-search">
+            <input type="text" placeholder="Search...">
+            <button onclick="searchFunction()">Search</button>
+        </div>
+        <div class="navbar-login">
+            <button onclick="showModal()">Login / Signup</button>
+        </div>
+    </nav>
+
+    <!-- Log-in & Sign-up popup-->
+
+    <div class="overlay" onclick="closeModal()"></div>
+    <div class="loginform">
+        <div class="container-a" id="container">
+            <div class="form-container sign-up">
+                <form id="form" method="POST">
+                    <h1>Create Account</h1>
+                    <div id="res" style="color:greenyellow;font-size: 10px;"></div>
+                    <div class="social-icons">
+                        <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                    <span>or use your email for registeration</span>
+                    <input type="text" name="name" placeholder="Name">
+                    <input type="email" name="email" placeholder="Email">
+                    <input type="password" name="password" placeholder="Password">
+                    <button name="btn">Sign Up</button>
+                </form>
+            </div>
+            <div class="form-container sign-in">
+                <form id="form" method="POST">
+                    <h1>Sign In</h1>
+                    <div id="res" style="color:greenyellow;font-size: 10px;"></div>
+                    <div class="social-icons">
+                        <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </div>
+                    <span>or use your email password</span>
+                    <input type="email" name="email" placeholder="Email">
+                    <input type="password" name="password" placeholder="Password">
+                    <a href="#">Forget Your Password?</a>
+                    <button name="btn">Sign In</button>
+                </form>
+            </div>
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-left">
+                        <img src="login-2.png" id="background-image" alt="">
+                        <button class="hidden" id="login">Sign In</button>
+                        <video id="background-video" loop muted autoplay>
+                            <source src="login-v1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="toggle-panel toggle-right">
+                        <img src="login-1.png" id="background-image" alt="">
+                        <button class="hidden" id="register" style="margin-top: 19px;">Sign Up</button>
+                        <video id="background-video" loop muted autoplay>
+                            <source src="login-v2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showModal() {
+            document.querySelector('.overlay').classList.add('showoverlay');
+            document.querySelector('.loginform').classList.add('showloginform');
+        }
+
+        function closeModal() {
+            document.querySelector('.overlay').classList.remove('showoverlay');
+            document.querySelector('.loginform').classList.remove('showloginform');
+        }
+
+        const container = document.getElementById('container');
+        const registerBtn = document.getElementById('register');
+        const loginBtn = document.getElementById('login');
+
+        registerBtn.addEventListener('click', () => {
+            container.classList.add("active");
+        });
+
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove("active");
+        });
+
+
+        // this script using for registration form data save in googlesheet
+        let url = 'https://script.google.com/macros/s/AKfycbx1t0TINX7MHM0PNx8-F-GOXb7hsUCW0Q6dVCD0fnVo23wg2lSRPJ0RWYcJBrZPRyaB4Q/exec';
+        let form = document.querySelector('#form');
+        form.addEventListener("submit", (e) => {
+            e.target.btn.innerhtml = "Submitting";
+            let d = new FormData(form);
+            fetch(url, {
+                method: "POST",
+                body: d
+            }).then((res) => res.text())
+                .then((finalRes) => {
+                    e.target.btn.innerHTML = "Submit";
+                    document.getElementById("res").innerHTML = finalRes;
+                    form.reset();
+                    setTimeout(() => {
+                        document.getElementById("res").innerHTML = '';
+                    }, 5000)
+                })
+            e.preventDefault();
+        })
+         
+        //this script using for save login data in same google sheet
+        let loginForm = document.querySelector('.form-container.sign-in form');
+        loginForm.addEventListener("submit", (e) => {
+            e.preventDefault(); 
+            e.target.btn.innerHTML = "Submitting"; // for changing btn name
+            let d = new FormData(loginForm); // FormData making
+
+            fetch(url, {
+                method: "POST",
+                body: d
+            }).then((res) => res.text())
+                .then((finalRes) => {
+                    e.target.btn.innerHTML = "Submit"; // after few time name back in originalform
+                    document.getElementById("res").innerHTML = finalRes; // display result
+                    loginForm.reset(); // after submit form auto reset
+                    setTimeout(() => {
+                        document.getElementById("res").innerHTML = ''; // after 5 sec result will be cleared
+                    }, 5000);
+                });
+        });
+    </script>
+
+    <!-- About-Us Description -->
+
+    <div class="main-box">
+        <div class="img-box">
+            <img src="about.jpeg" alt="">
+            <br>
+            <center>
+                <p style="padding-top:50px;">
+                <h1>Hello, I'm NITESH</h1>
+                <br>
+                <p style="text-align: center;padding: 2px;">
+                    "Welcome to Cyber-Zone! Your hub for the latest insights in cybersecurity and computer science.
+                    Stay informed with expert tips, tutorials, and news to boost your digital knowledge!"
+                </p>
+                </p>
+                <br>
+                <br>
+                <i class="fa-brands fa-square-facebook"></i>
+                <i class="fa-brands fa-square-instagram"></i>
+                <i class="fa-brands fa-twitter"></i>
+                <i class="fa-brands fa-linkedin"></i>
+            </center>
+
+
+        </div>
+
+        <div class="txt-box">
+            <h1 style="font-size:4rem;">About us</h1>
+            <p>
+                "Cyber-Zone is dedicated to delivering valuable content on cybersecurity and computer science.
+                Our goal is to empower readers with up-to-date knowledge, tips, and tutorials in the tech world.
+                Whether you're a beginner or an expert, Cyber-Zone is your trusted source for navigating the
+                ever-evolving digital landscape."
+                <br>
+                <br>
+                "Cyber-Zone is your go-to platform for everything related to cybersecurity and computer science. We
+                provide in-depth articles, expert insights, and practical guides to help you stay ahead in the tech
+                world. Whether you're passionate about security or coding, you'll find valuable resources to enhance
+                your skills here."
+            </p>
+            <br>
+            <br>
+            <a id="btn" href="contact.html" id="btn">Contact us</a>
+        </div>
+    </div>
+</body>
+
+</html>
